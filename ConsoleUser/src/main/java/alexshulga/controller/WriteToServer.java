@@ -31,35 +31,37 @@ public class WriteToServer {
 
         while (reader.hasNextLine()) {
             line = reader.nextLine();
-            String[] strings = line.split(" ");
-            JSONObject resultJson = new JSONObject();
+            if(!"".equals(line)) {
+                String[] strings = line.split(" ");
+                JSONObject resultJson = new JSONObject();
 
-            if (isRegistration) {
-                Validator validator = new Validator();
-                if (!validator.isValidateRequest(line)) {
-                    LOGGER.log(Level.INFO, " - Invalid command");
-                } else {
-                    resultJson.put("code", REGISTER);
-                    resultJson.put("status", strings[1]);
-                    resultJson.put("username", strings[2]);
-                    session.getBasicRemote().sendText(String.valueOf(resultJson));
-                    isRegistration = false;
+                if (isRegistration) {
+                    Validator validator = new Validator();
+                    if (!validator.isValidateRequest(line)) {
+                        LOGGER.log(Level.INFO, " - Invalid command");
+                    } else {
+                        resultJson.put("code", REGISTER);
+                        resultJson.put("status", strings[1]);
+                        resultJson.put("username", strings[2]);
+                        session.getBasicRemote().sendText(String.valueOf(resultJson));
+                        isRegistration = false;
+                    }
                 }
-            }
-            else if(COMMAND_LEAVE.equals(strings[0])){
-                resultJson.put("code", LEAVE);
-                session.getBasicRemote().sendText(String.valueOf(resultJson));
-            }
-            else if(COMMAND_EXIT.equals(strings[0])){
-                resultJson.put("code", EXIT);
-                session.getBasicRemote().sendText(String.valueOf(resultJson));
-                reader.close();
-                break;
-            }
-            else{
-                resultJson.put("code", MESSAGE);
-                resultJson.put("message", line);
-                session.getBasicRemote().sendText(String.valueOf(resultJson));
+                else if (COMMAND_LEAVE.equals(strings[0])) {
+                    resultJson.put("code", LEAVE);
+                    session.getBasicRemote().sendText(String.valueOf(resultJson));
+                }
+                else if (COMMAND_EXIT.equals(strings[0])) {
+                    resultJson.put("code", EXIT);
+                    session.getBasicRemote().sendText(String.valueOf(resultJson));
+                    reader.close();
+                    break;
+                }
+                else {
+                    resultJson.put("code", MESSAGE);
+                    resultJson.put("message", line);
+                    session.getBasicRemote().sendText(String.valueOf(resultJson));
+                }
             }
         }
 

@@ -15,14 +15,16 @@ public class UserHandler {
 
     private static Base base = new Base();
     private static Controller controller = new Controller(base);
+    private Session session;
 
     @OnOpen
     public void onOpen(Session s) {
         System.out.println("open");
+        session = s;
     }
 
     @OnMessage
-    public void onMessage(String message, Session session) throws IOException {
+    public void onMessage(String message) throws IOException {
         JSONObject jsonObject = new JSONObject(message);
 
         System.out.println("1");
@@ -60,7 +62,8 @@ public class UserHandler {
     }
 
     @OnClose
-    public void onClose(){
+    public void onClose() throws IOException {
+        controller.exit(session);
         System.out.println("Close");
     }
 }

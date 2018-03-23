@@ -4,11 +4,16 @@ import alexshulga.model.Base;
 import alexshulga.model.Parameters;
 import org.json.JSONObject;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.websocket.Session;
 import java.io.IOException;
 
 public class Controller {
 
+    private static final Logger LOGGER = LogManager.getLogger();
     private Base base;
 
     public Controller(Base base){
@@ -20,6 +25,8 @@ public class Controller {
     }
 
     public void createPair() throws IOException {
+
+        LOGGER.log(Level.INFO, " --- registred");
 
         if (!base.getListClient().isEmpty() && !base.getListAgent().isEmpty()) {
 
@@ -89,18 +96,28 @@ public class Controller {
     }
 
     public void leave(Session session) throws IOException {
-        if (base.getMapPair().containsKey(session)) {
+        if (base.getMapPair().containsKey(session)){
 
-            sendInfo(findValue(session), "2", base.getMapParameters().get(session).getParameter1(),
-                    base.getMapParameters().get(session).getParameter2());
+            if("client".equals(base.getMapParameters().get(session).getParameter1())) {
 
-            Session data = findValue(session);
+                sendInfo(findValue(session), "2", base.getMapParameters().get(session).getParameter1(),
+                        base.getMapParameters().get(session).getParameter2());
 
-            base.getListAgent().add(data);
-            base.getListClient().add(session);
+                Session data = findValue(session);
 
-            base.getMapPair().remove(data);
-            base.getMapPair().remove(session);
+                base.getListAgent().add(data);
+                base.getListClient().add(session);
+
+                base.getMapPair().remove(data);
+                base.getMapPair().remove(session);
+            }
+            else {
+                session.getBasicRemote().sendText("4" + "|" + base.getMapParameters().get(session).getParameter1() + "|"
+                        + base.getMapParameters().get(session).getParameter2() + "|" + "/leave");
+
+                findValue(session).getBasicRemote().sendText("4" + "|" + base.getMapParameters().get(session).getParameter1() + "|"
+                        + base.getMapParameters().get(session).getParameter2() + "|" + "/leave");
+            }
         }
     }
 

@@ -2,6 +2,9 @@ package alexshulga.view;
 
 import alexshulga.controller.ReadFromServer;
 import alexshulga.controller.WriteToServer;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
@@ -11,6 +14,8 @@ import java.io.IOException;
 import java.net.URI;
 
 public class Console {
+
+    private static final Logger LOGGER = LogManager.getLogger();
 
     private String url;
     private WebSocketContainer webSocketContainer;
@@ -27,9 +32,9 @@ public class Console {
             WriteToServer writeToServer = new WriteToServer();
             writeToServer.write(session);
         } catch (DeploymentException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.INFO, " - Server is not running");
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.catching(e);
         }
     }
 

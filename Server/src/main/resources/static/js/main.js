@@ -48,6 +48,7 @@ window.onload = function () {
         else if (str[0] == '5') {
             messageElement.classList.add('event-message');
             message = 'You connected with ' + str[1] + " " + str[2];
+
         }
         else {
             message = str[3];
@@ -121,12 +122,14 @@ window.onload = function () {
     };
 
     document.forms["messageFormSend"].onsubmit = function () {
-        console.log("send");
         var message = {
             code: "4",
             message: this.message.value
         }
-        socket.send(JSON.stringify(message));
+        if(message.message != "") {
+            socket.send(JSON.stringify(message));
+            document.forms["messageFormSend"].message = "";
+        }
         return false;
     };
 };

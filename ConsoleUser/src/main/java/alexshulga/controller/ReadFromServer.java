@@ -20,7 +20,7 @@ public class ReadFromServer {
 
     @OnOpen
     public void onOpen(){
-        System.out.println("You connected with server.");
+        LOGGER.log(Level.INFO, " --- You connected with server.");
     }
 
     @OnMessage
