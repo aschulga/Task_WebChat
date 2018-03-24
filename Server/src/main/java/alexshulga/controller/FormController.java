@@ -15,9 +15,4 @@ public class FormController {
     public String pageAgent() {
         return "agent";
     }
-
-    @GetMapping("/1")
-    public String page() {
-        return "1";
-    }
 }

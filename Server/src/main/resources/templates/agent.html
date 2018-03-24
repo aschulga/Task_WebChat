@@ -3,63 +3,57 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Agent</title>
-    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/bootstrap.css" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" />
+    <script src="/js/bootstrap.min.js" />
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
 </head>
+
 <body>
 
 <noscript>
     <h2>Sorry! Your browser doesn't support Javascript</h2>
 </noscript>
 
-<div id="username-page">
-    <div class="username-page-container">
-        <h1 class="title">You are agent</h1>
-        <h1 class="title">Enter your username</h1>
-        <form id="usernameForm" name="usernameForm">
-            <div class="form-group">
-                <input type="text" id="name" placeholder="Username" autocomplete="off" class="form-control"  name="username"/>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="accent username-submit">Start Chatting</button>
-            </div>
-        </form>
-    </div>
+<div class="username-page" id = "username-page">
+    <form id="usernameForm" name="usernameForm">
+        <h1 class="title">Agent</h1>
+        <input type="text" id="name" placeholder="Enter your username" autocomplete="off" class="form-control" name="username"/>
+        <button>Start chatting</button>
+    </form>
 </div>
 
 <div id="chat-page" class="hidden">
-    <div class="chat-container">
-        <div class="chat-header">
-            <h2>Chat</h2>
-        </div>
-        <div class="connecting">
-            Wait client
-        </div>
-        <ul id="messageArea">
-
+    <div class="chatbox">
+        <ul class="nav nav-tabs" id="tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#tab1">Tab 1</a>
+            </li>
         </ul>
-        <form id="messageFormSend" name="messageFormSend" nameForm="messageFormSend">
-            <div class="form-group">
-                <div class="input-group clearfix">
-                    <input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control" name="message"/>
-                    <button type="submit" class="primary">Send</button>
+        <a href="#" id="btnAdd"> Add Tab</a>
+
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab1">
+                <div class="chatlogs" id="chatlogs">
                 </div>
             </div>
-        </form>
+        </div>
 
-        <form id="messageFormLeave" name="messageFormLeave" nameForm="messageFormLeave">
+        <div class="chat-form">
+            <form class='sendForm' id="sendForm" name="sendForm">
+                <textarea name="textarea" placeholder="Type a message..."></textarea>
+                <button>Send</button>
+            </form>
+        </div>
 
-        </form>
-
-        <form id="messageFormExit" name="messageFormExit" nameForm="messageFormExit">
-            <div class="form-group">
-                <div class="input-group clearfix">
-                    <button type="submit" id='exitButton' class="primary">Exit</button>
-                </div>
-            </div>
-        </form>
+        <div class="exitAgent">
+            <form id="exitFormAgent" name="exitFormAgent">
+                <button>Exit</button>
+            </form>
+        </div>
     </div>
 </div>
 
-<script src="/js/main.js"></script>
+<script src="/js/agent.js"></script>
 </body>
 </html>

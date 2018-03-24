@@ -15,6 +15,7 @@ public class Controller {
 
     private static final Logger LOGGER = LogManager.getLogger();
     private Base base;
+    private int number = 2;
 
     public Controller(Base base){
         this.base = base;
