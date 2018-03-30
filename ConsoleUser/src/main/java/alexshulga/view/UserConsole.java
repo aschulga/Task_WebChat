@@ -13,7 +13,7 @@ import javax.websocket.WebSocketContainer;
 import java.io.IOException;
 import java.net.URI;
 
-public class Console {
+public class UserConsole {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -21,7 +21,7 @@ public class Console {
     private WebSocketContainer webSocketContainer;
     private Session session;
 
-    public Console(String url){
+    public UserConsole(String url){
         this.url = url;
     }
 
@@ -31,10 +31,15 @@ public class Console {
             session = webSocketContainer.connectToServer(ReadFromServer.class, URI.create(url));
             WriteToServer writeToServer = new WriteToServer();
             writeToServer.write(session);
-        } catch (DeploymentException e) {
+        }
+        catch (DeploymentException e) {
             LOGGER.log(Level.INFO, " - Server is not running");
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
+            LOGGER.log(Level.INFO, " --- Problems on the server.");
             LOGGER.catching(e);
+        }  finally {
+            exit();
         }
     }
 

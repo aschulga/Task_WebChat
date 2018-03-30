@@ -14,29 +14,15 @@ body{
     min-width: 390px;
     height: 250px;
     background: #fff;
-    padding: 20px;/*отвечают за центр белого фона*/
-    margin: 220px auto;/**/
+    padding: 20px;
+    margin: 220px auto;
     box-shadow: 0 3px #ccc;
     border-radius: 5px;
 }
 
 .username-page button{
     position: relative;
-    bottom: 80px;
-    left: 130px;
-    background: #f0ad4e;
-    padding: 10px 15px;
-    font-size: 20px;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    box-shadow: 0 3px 0 #985f0d;
-    cursor: pointer;
-}
-
-.username-page .clientButton{
-    position: relative;
-    bottom: 40px;
+    bottom: 20px;
     left: 130px;
     background: #f0ad4e;
     padding: 10px 15px;
@@ -52,41 +38,19 @@ body{
     text-align: center;
 }
 
-.username-page .form-controlClient {
+.username-page .form-control {
     position: relative;
-    bottom: 20px;
+    bottom: 10px;
     left: 0px;
     width: 100%;
     min-height: 38px;
     font-size: 20px;
-    margin: 40px auto;/**/
+    margin: 40px auto;
     border: 1px solid #c8c8c8;
 }
 
 .username-page .title{
     text-align: center;
-}
-
-.username-page .form-control {
-    position: relative;
-    bottom: 20px;
-    left: 0px;
-    width: 100%;
-    min-height: 38px;
-    font-size: 20px;
-    margin: 40px auto;/**/
-    border: 1px solid #c8c8c8;
-}
-
-.username-page .numberClient {
-    position: relative;
-    bottom: 70px;
-    left: 0px;
-    width: 100%;
-    min-height: 38px;
-    font-size: 20px;
-    margin: 20px auto;/**/
-    border: 1px solid #c8c8c8;
 }
 
 .chatbox{
@@ -128,13 +92,6 @@ body{
     margin-bottom: 10px;/*отступ между сообщениями*/
 }
 
-.chat .user-photo{
-    width: 60px;
-    height: 60px;
-    background: #ccc;
-    border-radius: 50%;
-}
-
 .chat .chat-message{
     width: 80%;
     padding: 15px;
@@ -143,15 +100,6 @@ body{
     border-radius: 10px;
     color: #fff;
     font-size: 20px;/*размер букв*/
-}
-
-.client .chat-message{
-    background: #1adda4;
-}
-
-.agent .chat-message{
-    background: #1ddced;
-    order: -1;
 }
 
 .chat-form{
@@ -214,18 +162,6 @@ body{
     cursor: pointer;
 }
 
-.exitAgent button{
-    background: #d9534f;
-    padding: 10px 20px;
-    font-size: 20px;
-    color: #fff;
-    border: none;
-    margin: 5px 0px;
-    border-radius: 5px;
-    box-shadow: 0 3px 0 #761c19;
-    cursor: pointer;
-}
-
 .leave button{
     background: #f0ad4e;
     padding: 10px 20px;
@@ -275,6 +211,7 @@ body{
     border-radius: 10px;
     color: #fff;
     font-size: 20px;/*размер букв*/
+    text-align: end;
     order: -1;
 }
 
@@ -286,4 +223,3 @@ body{
     font-size: 14px;
     word-wrap: break-word;
 }
-

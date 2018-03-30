@@ -6,11 +6,10 @@
     <link rel="stylesheet" href="/css/bootstrap.css" />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" />
     <script src="/js/bootstrap.min.js" />
-    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="/css/agent_page_style.css" />
 </head>
 
 <body>
-
 <noscript>
     <h2>Sorry! Your browser doesn't support Javascript</h2>
 </noscript>
@@ -19,41 +18,25 @@
     <form id="usernameForm" name="usernameForm">
         <h1 class="title">Agent</h1>
         <input type="text" id="name" placeholder="Enter your username" autocomplete="off" class="form-control" name="username"/>
+        <input type="text" id="numberClient" placeholder="Number of clients" autocomplete="off" class="numberClient" name="numberClient"/>
         <button>Start chatting</button>
     </form>
 </div>
 
 <div id="chat-page" class="hidden">
     <div class="chatbox">
-        <ul class="nav nav-tabs" id="tabs" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#tab1">Tab 1</a>
-            </li>
+        <ul class="nav nav-tabs" id="tabs">
         </ul>
-        <a href="#" id="btnAdd"> Add Tab</a>
 
         <div class="tab-content">
             <div class="tab-pane active" id="tab1">
-                <div class="chatlogs" id="chatlogs">
+                <div class="chatlogs" id="#tab1">
                 </div>
             </div>
-        </div>
-
-        <div class="chat-form">
-            <form class='sendForm' id="sendForm" name="sendForm">
-                <textarea name="textarea" placeholder="Type a message..."></textarea>
-                <button>Send</button>
-            </form>
-        </div>
-
-        <div class="exitAgent">
-            <form id="exitFormAgent" name="exitFormAgent">
-                <button>Exit</button>
-            </form>
         </div>
     </div>
 </div>
 
-<script src="/js/agent.js"></script>
+<script src="/js/agent_handler.js"></script>
 </body>
 </html>

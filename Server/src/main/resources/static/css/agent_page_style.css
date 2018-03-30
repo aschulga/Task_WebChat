@@ -12,32 +12,18 @@ body{
 .username-page{
     width: 450px;
     min-width: 390px;
-    height: 250px;
+    height: 300px;
     background: #fff;
-    padding: 20px;/*отвечают за центр белого фона*/
-    margin: 220px auto;/**/
+    padding: 20px;
+    margin: 220px auto;
     box-shadow: 0 3px #ccc;
     border-radius: 5px;
 }
 
 .username-page button{
     position: relative;
-    bottom: 80px;
-    left: 130px;
-    background: #f0ad4e;
-    padding: 10px 15px;
-    font-size: 20px;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    box-shadow: 0 3px 0 #985f0d;
-    cursor: pointer;
-}
-
-.username-page .clientButton{
-    position: relative;
-    bottom: 40px;
-    left: 130px;
+    bottom: 85px;
+    left: 135px;
     background: #f0ad4e;
     padding: 10px 15px;
     font-size: 20px;
@@ -52,31 +38,16 @@ body{
     text-align: center;
 }
 
-.username-page .form-controlClient {
-    position: relative;
-    bottom: 20px;
-    left: 0px;
-    width: 100%;
-    min-height: 38px;
-    font-size: 20px;
-    margin: 40px auto;/**/
-    border: 1px solid #c8c8c8;
-}
-
-.username-page .title{
-    text-align: center;
-}
-
 .username-page .form-control {
-    position: relative;
-    bottom: 20px;
-    left: 0px;
-    width: 100%;
-    min-height: 38px;
-    font-size: 20px;
-    margin: 40px auto;/**/
-    border: 1px solid #c8c8c8;
-}
+     position: relative;
+     bottom: 10px;
+     left: 0px;
+     width: 100%;
+     min-height: 38px;
+     font-size: 20px;
+     margin: 40px auto;
+     border: 1px solid #c8c8c8;
+ }
 
 .username-page .numberClient {
     position: relative;
@@ -85,8 +56,13 @@ body{
     width: 100%;
     min-height: 38px;
     font-size: 20px;
-    margin: 20px auto;/**/
+    margin: 40px auto;
     border: 1px solid #c8c8c8;
+    border-radius: 5px;
+}
+
+.username-page .title{
+    text-align: center;
 }
 
 .chatbox{
@@ -107,7 +83,7 @@ body{
 .chatlogs{
     padding: 10px;/*отвечают за центр белого фона внутри*/
     width: 100%;
-    height: 450px;
+    height: 500px;
     overflow-x: hidden;
     overflow-y: scroll;
 }
@@ -154,13 +130,16 @@ body{
     order: -1;
 }
 
-.chat-form{
+#sendForm{
     margin-top: 20px;
     display: flex;
     align-items: flex-start;
 }
 
-.chat-form textarea{
+#sendForm textarea{
+    position: relative;
+    bottom: 20px;
+    left: 0px;
     background: #fbfbfb;
     width:410px;
     height:50px;
@@ -172,23 +151,23 @@ body{
     color: #333;
 }
 
-.chat-form textarea:focus{
+#sendForm textarea:focus{
     background: #fff;
 }
 
-.chat-form textarea::-webkit-scrollbar{/*сразу скролла нет(потом появляется)*/
+#sendForm textarea::-webkit-scrollbar{/*сразу скролла нет(потом появляется)*/
     width: 10px;
 }
 
-.chat-form textarea::-webkit-scrollbar-thumb{/*сразу скролла нет(потом появляется)*/
+#sendForm textarea::-webkit-scrollbar-thumb{/*сразу скролла нет(потом появляется)*/
     border-radius: 5px;
     background: rgba(0,0,0,.1);
 }
 
-.chat-form button{
+#sendButton{
     position: relative;
-    bottom: 20px;
-    left: 10px;
+    bottom: 76px;
+    left: 425px;
     background: #1ddced;
     padding: 8px 20px;
     font-size: 20px;
@@ -199,10 +178,10 @@ body{
     cursor: pointer;
 }
 
-.exit button{
+#exitButton{
     position: relative;
-    bottom: 58px;
-    left: 100px;
+    bottom: 10px;
+    right: 80px;
     background: #d9534f;
     padding: 10px 20px;
     font-size: 20px;
@@ -214,7 +193,10 @@ body{
     cursor: pointer;
 }
 
-.exitAgent button{
+#exitButtonTab{
+    position: relative;
+    top: 50px;
+    left: 210px;
     background: #d9534f;
     padding: 10px 20px;
     font-size: 20px;
@@ -223,18 +205,6 @@ body{
     margin: 5px 0px;
     border-radius: 5px;
     box-shadow: 0 3px 0 #761c19;
-    cursor: pointer;
-}
-
-.leave button{
-    background: #f0ad4e;
-    padding: 10px 20px;
-    font-size: 20px;
-    color: #fff;
-    border: none;
-    margin: 5px 0px;
-    border-radius: 5px;
-    box-shadow: 0 3px 0 #985f0d;
     cursor: pointer;
 }
 
@@ -275,6 +245,7 @@ body{
     border-radius: 10px;
     color: #fff;
     font-size: 20px;/*размер букв*/
+    text-align: end;
     order: -1;
 }
 
@@ -286,4 +257,3 @@ body{
     font-size: 14px;
     word-wrap: break-word;
 }
-

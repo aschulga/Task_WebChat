@@ -3,10 +3,10 @@ package alexshulga.controller;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 
-import javax.websocket.ClientEndpoint;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
+import javax.websocket.*;
+import java.io.IOException;
 
 @ClientEndpoint
 public class ReadFromServer {
@@ -17,19 +17,21 @@ public class ReadFromServer {
     private static final int EXIT = 3;
     private static final int MESSAGE = 4;
     private static final int MESSAGE_ABOUT_CONNECT = 5;
+    private static final String TAB_NAME = "console";
 
     @OnOpen
-    public void onOpen(){
-        LOGGER.log(Level.INFO, " --- You connected with server.");
+    public void onOpen(Session session){
+        if(session.isOpen())
+            LOGGER.log(Level.INFO, " --- You connected with server.");
     }
 
     @OnMessage
-    public void onMessage(String msg){
+    public void onMessage(String msg, Session session) throws IOException {
         String[] strings = msg.split("\\|");
 
         switch (Integer.parseInt(strings[0])) {
             case REGISTER: {
-                LOGGER.log(Level.INFO, " --- "+strings[1] + " " + strings[2]+" registred");
+                LOGGER.log(Level.INFO, " --- "+strings[1] + " " + strings[2]+" registered");
                 break;
             }
             case LEAVE: {
@@ -46,10 +48,15 @@ public class ReadFromServer {
             }
             case MESSAGE_ABOUT_CONNECT:{
                 LOGGER.log(Level.INFO, " --- You connected with " + strings[1] + " " + strings[2]);
-                break;
-            }
-            case 6:{
-                LOGGER.log(Level.INFO, " --- Please wait agent");
+
+                if("client".equals(strings[1]))
+                {
+                    JSONObject resultJson = new JSONObject();
+                    resultJson.put("code", "5");
+                    resultJson.put("tabId", TAB_NAME);
+                    session.getBasicRemote().sendText(String.valueOf(resultJson));
+                }
+
                 break;
             }
         }

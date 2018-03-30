@@ -6,13 +6,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class FormController {
 
-    @GetMapping("/client")
+    @GetMapping("/client_page")
     public String pageClient() {
-        return "client";
+        return "client_page";
     }
 
-    @GetMapping("/agent")
+    @GetMapping("/agent_page")
     public String pageAgent() {
-        return "agent";
+        return "agent_page";
     }
+
 }
