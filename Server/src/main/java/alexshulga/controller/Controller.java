@@ -7,27 +7,21 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import javax.websocket.Session;
 import java.io.IOException;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class Controller {
 
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    private Base base;
-
-    public Controller(Base base) {
-        this.base = base;
-    }
-
-    public Base getBase() {
-        return base;
-    }
+    private Base base = Base.getInstance();
 
     public void checkForPair() throws IOException {
+
         if ((base.getListClient().size() != 0) && (base.getListAgent().size()) != 0) {
             Session session1 = base.getListClient().get(0);
             Session session2 = base.getListAgent().get(0);
@@ -57,16 +51,17 @@ public class Controller {
         if ("client".equals(jsonObject.get("status"))) {
             base.getListClient().add(session);
         } else {
-            for (int i = 0; i < Integer.parseInt(jsonObject.get("numberClient").toString()); i++) {
+            for(int i = 0; i < Integer.parseInt(jsonObject.get("numberClient").toString()); i++)
                 base.getListAgent().add(session);
-            }
         }
         base.getMapParameters().put(session, new Parameters<>(jsonObject.get("status").toString(), jsonObject.get("username").toString()));
 
         session.getBasicRemote().sendText("1" + "|" + base.getMapParameters().get(session).getParameter1()
                 + "|" + base.getMapParameters().get(session).getParameter2());
 
-        LOGGER.info(" - The appearance of "+jsonObject.get("status")+" "+jsonObject.get("username")+" in the system");
+        Integer id = base.getCounter().incrementAndGet();
+        base.getMapIdSession().put(id, session);
+        base.getMapSessionId().put(session, id);
 
         checkForPair();
     }
@@ -210,13 +205,15 @@ public class Controller {
 
     public void exitAgent(Session session)throws IOException {
         if (base.getMapAgent().size() != 0) {
-            Collection<Session> collection = base.getMapAgent().values();
 
-            for (int i = 0; i < collection.size(); i++) {
-                Session sessionClient = collection.iterator().next();
-                String tabId = base.getMapClient().get(sessionClient).getParameter2();
+            ArrayList<Session> arrayList = new ArrayList<>(base.getMapAgent().values());
+
+            for (int i = 0; i < arrayList.size(); i++) {
+                Session sessionClient = arrayList.get(i);
 
                 if (base.getMapClient().get(sessionClient).getParameter1().equals(session)) {
+                    String tabId = base.getMapClient().get(sessionClient).getParameter2();
+
                     String textMessage = 3 + "|"
                             + base.getMapParameters().get(session).getParameter1() + "|"
                             + base.getMapParameters().get(session).getParameter2();
@@ -253,6 +250,7 @@ public class Controller {
     }
 
     public void exitClient(Session session) throws IOException {
+
         if (base.getMapClient().containsKey(session)) {
             String tabId = base.getMapClient().get(session).getParameter2();
             Session sessionAgent = base.getMapClient().get(session).getParameter1();

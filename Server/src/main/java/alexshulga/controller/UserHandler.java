@@ -12,8 +12,8 @@ import java.io.IOException;
 @ServerEndpoint("/user")
 public class UserHandler {
 
-    private static Base base = new Base();
-    private static Controller controller = new Controller(base);
+    private Base base = Base.getInstance();
+    private Controller controller = new Controller();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     @OnMessage
@@ -21,12 +21,12 @@ public class UserHandler {
         JSONObject jsonObject = new JSONObject(message);
 
         System.out.println("1");
-        System.out.println("client "+controller.getBase().getListClient().size());
-        System.out.println("agent "+controller.getBase().getListAgent().size());
-        System.out.println("mapParameters "+controller.getBase().getMapParameters().size());
-        System.out.println("mapClient "+controller.getBase().getMapClient().size());
-        System.out.println("mapAgent "+controller.getBase().getMapAgent().size());
-        System.out.println("mapMessages "+controller.getBase().getMapMessages().size());
+        System.out.println("client "+base.getListClient().size());
+        System.out.println("agent "+base.getListAgent().size());
+        System.out.println("mapParameters "+base.getMapParameters().size());
+        System.out.println("mapClient "+base.getMapClient().size());
+        System.out.println("mapAgent "+base.getMapAgent().size());
+        System.out.println("mapMessages "+base.getMapMessages().size());
 
         if("1".equals(jsonObject.get("code"))) {
            controller.registration(session, jsonObject);
@@ -58,6 +58,14 @@ public class UserHandler {
         else if("5".equals(jsonObject.get("code"))){
             controller.createPair(jsonObject);
         }
+
+        System.out.println("2");
+        System.out.println("client "+base.getListClient().size());
+        System.out.println("agent "+base.getListAgent().size());
+        System.out.println("mapParameters "+base.getMapParameters().size());
+        System.out.println("mapClient "+base.getMapClient().size());
+        System.out.println("mapAgent "+base.getMapAgent().size());
+        System.out.println("mapMessages "+base.getMapMessages().size());
     }
 
     @OnClose
@@ -69,6 +77,14 @@ public class UserHandler {
                 controller.exitClient(session);
             }
         }
+
+        System.out.println("3");
+        System.out.println("client "+base.getListClient().size());
+        System.out.println("agent "+base.getListAgent().size());
+        System.out.println("mapParameters "+base.getMapParameters().size());
+        System.out.println("mapClient "+base.getMapClient().size());
+        System.out.println("mapAgent "+base.getMapAgent().size());
+        System.out.println("mapMessages "+base.getMapMessages().size());
     }
 
     @OnError
