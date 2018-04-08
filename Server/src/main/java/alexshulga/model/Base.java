@@ -7,9 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicLongArray;
 
 public class Base {
 
@@ -19,12 +17,12 @@ public class Base {
     private List<Session> listClient = new LinkedList<>();
     private Map<Session, Parameters<Session, String>> mapClient = new HashMap<>();
     private Map<Pair, Session> mapAgent = new HashMap<>();
-    private Map<Session, Parameters<String, String>> mapParameters = new HashMap<>();
+    private Map<Session, User> mapParametersUser = new HashMap<>();
     private Map<Session, LinkedList<String>> mapMessages = new HashMap<>();
 
-    private Map<Integer, Session> mapIdSession = new HashMap<>();
-    private Map<Session, Integer> mapSessionId = new HashMap<>();
-    private final AtomicInteger counter = new AtomicInteger();
+    private Map<Long, Session> mapId = new HashMap<>();
+    private final AtomicLong counterUsers = new AtomicLong();
+    private final AtomicLong counterChats = new AtomicLong();
 
     public Base(){
     }
@@ -52,23 +50,23 @@ public class Base {
         return mapAgent;
     }
 
-    public Map<Session, Parameters<String, String>> getMapParameters() {
-        return mapParameters;
+    public Map<Session, User> getMapParameters() {
+        return mapParametersUser;
     }
 
     public Map<Session, LinkedList<String>> getMapMessages() {
         return mapMessages;
     }
 
-    public Map<Integer, Session> getMapIdSession() {
-        return mapIdSession;
+    public Map<Long, Session> getMapId() {
+        return mapId;
     }
 
-    public Map<Session, Integer> getMapSessionId() {
-        return mapSessionId;
+    public AtomicLong getCounterUsers() {
+        return counterUsers;
     }
 
-    public AtomicInteger getCounter() {
-        return counter;
+    public AtomicLong getCounterChats() {
+        return counterChats;
     }
 }

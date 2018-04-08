@@ -12,6 +12,12 @@ import java.io.IOException;
 @ServerEndpoint("/user")
 public class UserHandler {
 
+    private static final String REGISTRATION = "1";
+    private static final String LEAVE = "2";
+    private static final String EXIT = "3";
+    private static final String MESSAGE = "4";
+    private static final String MESSAGE_ABOUT_CONNECT = "5";
+
     private Base base = Base.getInstance();
     private Controller controller = new Controller();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
@@ -28,15 +34,15 @@ public class UserHandler {
         System.out.println("mapAgent "+base.getMapAgent().size());
         System.out.println("mapMessages "+base.getMapMessages().size());
 
-        if("1".equals(jsonObject.get("code"))) {
+        if(REGISTRATION.equals(jsonObject.get("code"))) {
            controller.registration(session, jsonObject);
         }
-        else if("2".equals(jsonObject.get("code"))){
+        else if(LEAVE.equals(jsonObject.get("code"))){
             controller.leave(session);
         }
-        else if("3".equals(jsonObject.get("code"))){
-            if ("agent".equals(base.getMapParameters().get(session).getParameter1())) {
-                if("console".equals(jsonObject.get("tabId"))){
+        else if(EXIT.equals(jsonObject.get("code"))){
+            if ("agent".equals(base.getMapParameters().get(session).getStatus())) {
+                if("console".equals(jsonObject.get("tabId")) || "tabRestAgent".equals(jsonObject.getString("tabId"))){
                     controller.exitAgent(session);
                 }
                 else {
@@ -47,7 +53,7 @@ public class UserHandler {
                 controller.exitClient(session);
             }
         }
-        else if("4".equals(jsonObject.get("code"))) {
+        else if(MESSAGE.equals(jsonObject.get("code"))) {
             if ("client".equals(jsonObject.get("status"))) {
                 controller.sendMessageToAgent(session, jsonObject);
             }
@@ -55,7 +61,7 @@ public class UserHandler {
                 controller.sendMessageToClient(session, jsonObject);
             }
         }
-        else if("5".equals(jsonObject.get("code"))){
+        else if(MESSAGE_ABOUT_CONNECT.equals(jsonObject.get("code"))){
             controller.createPair(jsonObject);
         }
 
@@ -71,7 +77,7 @@ public class UserHandler {
     @OnClose
     public void onClose(Session session) throws IOException {
         if (base.getMapParameters().containsKey(session)) {
-            if ("agent".equals(base.getMapParameters().get(session).getParameter1())) {
+            if ("agent".equals(base.getMapParameters().get(session).getStatus())) {
                 controller.exitAgent(session);
             } else {
                 controller.exitClient(session);

@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class WriteToServer {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final String REGISTER = "1";
+    private static final String REGISTRATION = "1";
     private static final String TAB_NAME = "console";
 
     private Scanner reader;
@@ -35,7 +35,7 @@ public class WriteToServer {
                     LOGGER.log(Level.INFO, " - Invalid command");
                 } else {
 
-                    resultJson.put("code", REGISTER);
+                    resultJson.put("code", REGISTRATION);
                     resultJson.put("status", strings[1]);
                     resultJson.put("username", strings[2]);
 

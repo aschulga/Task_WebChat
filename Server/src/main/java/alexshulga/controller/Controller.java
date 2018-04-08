@@ -2,21 +2,23 @@ package alexshulga.controller;
 
 import alexshulga.model.Base;
 import alexshulga.model.Parameters;
+import alexshulga.model.User;
 import javafx.util.Pair;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.websocket.Session;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
+
 
 public class Controller {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+    //private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LogManager.getLogger();
 
     private Base base = Base.getInstance();
 
@@ -26,11 +28,11 @@ public class Controller {
             Session session1 = base.getListClient().get(0);
             Session session2 = base.getListAgent().get(0);
 
-            session1.getBasicRemote().sendText("5" + "|" + base.getMapParameters().get(session2).getParameter1()
-                    + "|" + base.getMapParameters().get(session2).getParameter2());
+            session1.getBasicRemote().sendText("5" + "|" + base.getMapParameters().get(session2).getStatus()
+                    + "|" + base.getMapParameters().get(session2).getName());
 
-            session2.getBasicRemote().sendText("5" + "|" + base.getMapParameters().get(session1).getParameter1()
-                    + "|" + base.getMapParameters().get(session1).getParameter2());
+            session2.getBasicRemote().sendText("5" + "|" + base.getMapParameters().get(session1).getStatus()
+                    + "|" + base.getMapParameters().get(session1).getName());
         }
     }
 
@@ -43,6 +45,10 @@ public class Controller {
         Pair key = new Pair(session2, jsonObject.get("tabId").toString());
         base.getMapAgent().put(key, session1);
 
+        LOGGER.info( " - The beginning of a chat between "+base.getMapParameters().get(session1).getStatus()+" "+
+                base.getMapParameters().get(session1).getName()+" and "+base.getMapParameters().get(session2).getStatus()+" "+
+                base.getMapParameters().get(session2).getName());
+
         checkForPair();
         clearMapMessages(session1);
     }
@@ -54,14 +60,18 @@ public class Controller {
             for(int i = 0; i < Integer.parseInt(jsonObject.get("numberClient").toString()); i++)
                 base.getListAgent().add(session);
         }
-        base.getMapParameters().put(session, new Parameters<>(jsonObject.get("status").toString(), jsonObject.get("username").toString()));
 
-        session.getBasicRemote().sendText("1" + "|" + base.getMapParameters().get(session).getParameter1()
-                + "|" + base.getMapParameters().get(session).getParameter2());
+        Long id = base.getCounterUsers().incrementAndGet();
 
-        Integer id = base.getCounter().incrementAndGet();
-        base.getMapIdSession().put(id, session);
-        base.getMapSessionId().put(session, id);
+        base.getMapParameters().put(session, new User(id, jsonObject.get("status").toString(),
+                jsonObject.get("username").toString()));
+
+        base.getMapId().put(id, session);
+
+        session.getBasicRemote().sendText("1" + "|" + base.getMapParameters().get(session).getStatus()
+                + "|" + base.getMapParameters().get(session).getName());
+
+        LOGGER.info(" - The appearance of "+jsonObject.get("status")+" "+jsonObject.get("username")+" in the system");
 
         checkForPair();
     }
@@ -72,8 +82,8 @@ public class Controller {
             Session sessionClient = base.getMapAgent().get(key);
 
             String textMessage = jsonObject.get("code") + "|"
-                    + base.getMapParameters().get(sessionAgent).getParameter1() + "|"
-                    + base.getMapParameters().get(sessionAgent).getParameter2() + "|"
+                    + base.getMapParameters().get(sessionAgent).getStatus() + "|"
+                    + base.getMapParameters().get(sessionAgent).getName() + "|"
                     + jsonObject.get("message") + "|" + jsonObject.get("tabId").toString();
 
             sessionAgent.getBasicRemote().sendText(textMessage);
@@ -87,8 +97,8 @@ public class Controller {
         }
 
         String textMessage = jsonObject.get("code") + "|"
-                + base.getMapParameters().get(sessionClient).getParameter1() + "|"
-                + base.getMapParameters().get(sessionClient).getParameter2() + "|"
+                + base.getMapParameters().get(sessionClient).getStatus() + "|"
+                + base.getMapParameters().get(sessionClient).getName() + "|"
                 + jsonObject.get("message");
 
         sessionClient.getBasicRemote().sendText(textMessage);
@@ -102,15 +112,15 @@ public class Controller {
             Session sessionAgent = base.getMapClient().get(sessionClient).getParameter1();
 
             String textMessage = jsonObject.get("code") + "|"
-                    + base.getMapParameters().get(sessionClient).getParameter1() + "|"
-                    + base.getMapParameters().get(sessionClient).getParameter2() + "|"
+                    + base.getMapParameters().get(sessionClient).getStatus() + "|"
+                    + base.getMapParameters().get(sessionClient).getName() + "|"
                     + jsonObject.get("message") + "|" + tabId;
 
             sessionAgent.getBasicRemote().sendText(textMessage);
         } else {
             String textMessage = jsonObject.get("code") + "|"
-                    + base.getMapParameters().get(sessionClient).getParameter1() + "|"
-                    + base.getMapParameters().get(sessionClient).getParameter2() + "|"
+                    + base.getMapParameters().get(sessionClient).getStatus() + "|"
+                    + base.getMapParameters().get(sessionClient).getName() + "|"
                     + jsonObject.get("message");
 
             base.getMapMessages().get(sessionClient).push(textMessage);
@@ -138,19 +148,19 @@ public class Controller {
 
     public void leave(Session sessionClient) throws IOException {
         if (base.getMapClient().containsKey(sessionClient)) {
-            if ("client".equals(base.getMapParameters().get(sessionClient).getParameter1())) {
+            if ("client".equals(base.getMapParameters().get(sessionClient).getStatus())) {
                 String tabId = base.getMapClient().get(sessionClient).getParameter2();
                 Session sessionAgent = base.getMapClient().get(sessionClient).getParameter1();
 
                 String textMessage = 2 + "|"
-                        + base.getMapParameters().get(sessionClient).getParameter1() + "|"
-                        + base.getMapParameters().get(sessionClient).getParameter2() + "|" + tabId;
+                        + base.getMapParameters().get(sessionClient).getStatus() + "|"
+                        + base.getMapParameters().get(sessionClient).getName() + "|" + tabId;
 
                 sessionAgent.getBasicRemote().sendText(textMessage);
 
-                LOGGER.info(" - The end of the chat between " + base.getMapParameters().get(sessionClient).getParameter1() + " " +
-                        base.getMapParameters().get(sessionClient).getParameter2() + " and " + base.getMapParameters().get(sessionAgent).getParameter1() + " " +
-                        base.getMapParameters().get(sessionAgent).getParameter2());
+                LOGGER.info(" - The end of the chat between " + base.getMapParameters().get(sessionClient).getStatus() + " " +
+                        base.getMapParameters().get(sessionClient).getName() + " and " + base.getMapParameters().get(sessionAgent).getStatus() + " " +
+                        base.getMapParameters().get(sessionAgent).getName());
 
                 Pair key = new Pair(sessionAgent, tabId);
                 base.getMapAgent().remove(key);
@@ -169,17 +179,17 @@ public class Controller {
             Session sessionClient = base.getMapAgent().get(key);
 
             String textMessage = 3 + "|"
-                    + base.getMapParameters().get(session).getParameter1() + "|"
-                    + base.getMapParameters().get(session).getParameter2();
+                    + base.getMapParameters().get(session).getStatus() + "|"
+                    + base.getMapParameters().get(session).getName();
 
             sessionClient.getBasicRemote().sendText(textMessage);
 
-            LOGGER.info(" - The "+base.getMapParameters().get(session).getParameter1()+" "+
-                    base.getMapParameters().get(session).getParameter2()+" left the system");
+            LOGGER.info(" - The "+base.getMapParameters().get(session).getStatus()+" "+
+                    base.getMapParameters().get(session).getName()+" left the system");
 
-            LOGGER.info(" - The end of the chat between "+base.getMapParameters().get(sessionClient).getParameter1()+" "+
-                    base.getMapParameters().get(sessionClient).getParameter2()+" and "+base.getMapParameters().get(session).getParameter1()+" "+
-                    base.getMapParameters().get(session).getParameter2());
+            LOGGER.info(" - The end of the chat between "+base.getMapParameters().get(sessionClient).getStatus()+" "+
+                    base.getMapParameters().get(sessionClient).getName()+" and "+base.getMapParameters().get(session).getStatus()+" "+
+                    base.getMapParameters().get(session).getName());
 
             base.getMapAgent().remove(key);
             base.getMapClient().remove(sessionClient);
@@ -195,10 +205,14 @@ public class Controller {
                 }
             }
 
-            LOGGER.info(" - The "+base.getMapParameters().get(session).getParameter1()+" "+
-                    base.getMapParameters().get(session).getParameter2()+" left the system");
+            LOGGER.info(" - The "+base.getMapParameters().get(session).getStatus()+" "+
+                    base.getMapParameters().get(session).getName()+" left the system");
 
+            Long id = base.getMapParameters().get(session).getId();
+
+            base.getMapId().remove(id);
             base.getMapParameters().remove(session);
+
             checkForPair();
         }
     }
@@ -215,17 +229,17 @@ public class Controller {
                     String tabId = base.getMapClient().get(sessionClient).getParameter2();
 
                     String textMessage = 3 + "|"
-                            + base.getMapParameters().get(session).getParameter1() + "|"
-                            + base.getMapParameters().get(session).getParameter2();
+                            + base.getMapParameters().get(session).getStatus() + "|"
+                            + base.getMapParameters().get(session).getName();
 
                     sessionClient.getBasicRemote().sendText(textMessage);
 
-                    LOGGER.info(" - The "+base.getMapParameters().get(session).getParameter1()+" "+
-                            base.getMapParameters().get(session).getParameter2()+" left the system");
+                    LOGGER.info(" - The "+base.getMapParameters().get(session).getStatus()+" "+
+                            base.getMapParameters().get(session).getName()+" left the system");
 
-                    LOGGER.info(" - The end of the chat between "+base.getMapParameters().get(sessionClient).getParameter1()+" "+
-                            base.getMapParameters().get(sessionClient).getParameter2()+" and "+base.getMapParameters().get(session).getParameter1()+" "+
-                            base.getMapParameters().get(session).getParameter2());
+                    LOGGER.info(" - The end of the chat between "+base.getMapParameters().get(sessionClient).getStatus()+" "+
+                            base.getMapParameters().get(sessionClient).getName()+" and "+base.getMapParameters().get(session).getStatus()+" "+
+                            base.getMapParameters().get(session).getName());
 
                     Pair key = new Pair(session, tabId);
                     base.getMapAgent().remove(key);
@@ -242,10 +256,10 @@ public class Controller {
             }
         }
 
-        LOGGER.info(" - The "+base.getMapParameters().get(session).getParameter1()+" "+
-                base.getMapParameters().get(session).getParameter2()+" left the system");
-
+        Long id = base.getMapParameters().get(session).getId();
+        base.getMapId().remove(id);
         base.getMapParameters().remove(session);
+
         checkForPair();
     }
 
@@ -256,32 +270,39 @@ public class Controller {
             Session sessionAgent = base.getMapClient().get(session).getParameter1();
 
             String textMessage = 3 + "|"
-                    + base.getMapParameters().get(session).getParameter1() + "|"
-                    + base.getMapParameters().get(session).getParameter2() + "|" + tabId;
+                    + base.getMapParameters().get(session).getStatus() + "|"
+                    + base.getMapParameters().get(session).getName() + "|" + tabId;
 
             sessionAgent.getBasicRemote().sendText(textMessage);
 
-            LOGGER.info(" - The "+base.getMapParameters().get(session).getParameter1()+" "+
-                    base.getMapParameters().get(session).getParameter2()+" left the system");
+            LOGGER.info(" - The "+base.getMapParameters().get(session).getStatus()+" "+
+                    base.getMapParameters().get(session).getName()+" left the system");
 
-            LOGGER.info(" - The end of the chat between "+base.getMapParameters().get(session).getParameter1()+" "+
-                    base.getMapParameters().get(session).getParameter2()+" and "+base.getMapParameters().get(sessionAgent).getParameter1()+" "+
-                    base.getMapParameters().get(sessionAgent).getParameter2());
+            LOGGER.info(" - The end of the chat between "+base.getMapParameters().get(session).getStatus()+" "+
+                    base.getMapParameters().get(session).getName()+" and "+base.getMapParameters().get(sessionAgent).getStatus()+" "+
+                    base.getMapParameters().get(sessionAgent).getName());
 
             Pair key = new Pair(sessionAgent, tabId);
             base.getMapAgent().remove(key);
             base.getMapClient().remove(session);
             base.getListAgent().add(sessionAgent);
+
+            Long id = base.getMapParameters().get(session).getId();
+            base.getMapId().remove(id);
             base.getMapParameters().remove(session);
+
             checkForPair();
         } else if (base.getMapParameters().containsKey(session)) {
 
-            LOGGER.info(" - The "+base.getMapParameters().get(session).getParameter1()+" "+
-                    base.getMapParameters().get(session).getParameter2()+" left the system");
+            LOGGER.info(" - The "+base.getMapParameters().get(session).getStatus()+" "+
+                    base.getMapParameters().get(session).getName()+" left the system");
 
             base.getListClient().remove(session);
-            base.getMapParameters().remove(session);
             base.getMapMessages().remove(session);
+
+            Long id = base.getMapParameters().get(session).getId();
+            base.getMapId().remove(id);
+            base.getMapParameters().remove(session);
         }
     }
 }

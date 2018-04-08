@@ -12,7 +12,7 @@ import java.io.IOException;
 public class ReadFromServer {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final int REGISTER = 1;
+    private static final int REGISTRATION = 1;
     private static final int LEAVE = 2;
     private static final int EXIT = 3;
     private static final int MESSAGE = 4;
@@ -30,7 +30,7 @@ public class ReadFromServer {
         String[] strings = msg.split("\\|");
 
         switch (Integer.parseInt(strings[0])) {
-            case REGISTER: {
+            case REGISTRATION: {
                 LOGGER.log(Level.INFO, " --- "+strings[1] + " " + strings[2]+" registered");
                 break;
             }
